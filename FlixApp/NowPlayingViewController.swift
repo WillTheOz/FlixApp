@@ -25,6 +25,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
         tableView.insertSubview(refreshControl, at: 0)
         tableView.dataSource = self
         tableView.rowHeight = 200
+        activityIndicator.startAnimating()
         fetchMovies()
         
         }
@@ -47,6 +48,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
                 let movies = dataDictionary["results"] as! [[String: Any]]
                 self.movies = movies
                 self.tableView.reloadData()
+                self.activityIndicator.stopAnimating()
                 self.refreshControl.endRefreshing()
             }
         }
