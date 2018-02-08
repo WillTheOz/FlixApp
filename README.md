@@ -46,6 +46,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## License
 
 Copyright [2018] [William Doran IV]
+<<<<<<< HEAD
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -105,6 +106,8 @@ Describe any challenges encountered while building the app.
 ## License
 
 Copyright [2018] [William Doran IV]
+=======
+<<<<<<<< HEAD
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
