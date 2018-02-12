@@ -10,32 +10,26 @@ import UIKit
 
 class SuperheroViewController: UIViewController, UICollectionViewDataSource {
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var movies: [[String: Any]] = []
+    var refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(SuperheroViewController.didPullTeRefresh(_:)), for: .valueChanged)
+        collectionView.insertSubview(refreshControl, at: 10)
         collectionView.dataSource = self
+        activityIndicator.startAnimating()
         fetchMovies()
 
         // Do any additional setup after loading the view.
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
-        let movie = movies[indexPath.item]
-        if let posterPathString = movie["poster_path"] as? String {
-           let baseURLString = "https://image.tmdb.org/t/p/w500"
-           let posterURL = URL(string: baseURLString + posterPathString)!
-            cell.posterImageView.af_setImage(withURL: posterURL)
-            
-            
-        }
-        return cell
+    @objc func didPullTeRefresh(_ refreshControl: UIRefreshControl) {
+        fetchMovies()
     }
     
     func fetchMovies() {
@@ -51,11 +45,37 @@ class SuperheroViewController: UIViewController, UICollectionViewDataSource {
                 let movies = dataDictionary["results"] as! [[String: Any]]
                 self.movies = movies
                 self.collectionView.reloadData()
-                //self.activityIndicator.stopAnimating()
-                //self.refreshControl.endRefreshing()
+                self.activityIndicator.stopAnimating()
+                self.refreshControl.endRefreshing()
             }
         }
         task.resume()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return movies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PosterCell", for: indexPath) as! PosterCell
+        
+        let movie = movies[indexPath.item]
+        if let posterPathString = movie["poster_path"] as? String {
+           let baseURLString = "https://image.tmdb.org/t/p/w500"
+           let posterURL = URL(string: baseURLString + posterPathString)!
+            cell.posterImageView.af_setImage(withURL: posterURL)
+            
+        }
+        return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let cell = sender as! UICollectionViewCell
+        if let indexPath = collectionView.indexPath(for: cell) {
+           let movie = movies[indexPath.row]
+            let superDetailViewController = segue.destination as! SuperDetailViewController
+            superDetailViewController.movie = movie
+        }
     }
 
     override func didReceiveMemoryWarning() {

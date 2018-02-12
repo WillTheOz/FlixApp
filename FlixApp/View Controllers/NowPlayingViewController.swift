@@ -19,7 +19,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(NowPlayingViewController.didPullTeRefresh(_:)), for: .valueChanged)
         tableView.insertSubview(refreshControl, at: 0)
@@ -31,7 +30,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
         }
     
     @objc func didPullTeRefresh(_ refreshControl: UIRefreshControl) {
-        
         fetchMovies()
     }
     
@@ -53,9 +51,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
             }
         }
         task.resume()
-        
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies.count
@@ -63,7 +59,6 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
-        
         
         let movie = movies[indexPath.row]
         let title = movie["title"] as! String
@@ -89,6 +84,7 @@ class NowPlayingViewController: UIViewController, UITableViewDataSource{
             detailViewController.movie = movie
         }
     }
+    
     override func didReceiveMemoryWarning() {
        super.didReceiveMemoryWarning()
     
